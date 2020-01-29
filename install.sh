@@ -217,6 +217,7 @@ apt-get -qq install git
 
 # Install Fail2Ban
 if [[ ("$FAIL2BAN" == "y" || "$FAIL2BAN" == "Y" || "$FAIL2BAN" == "") ]]; then
+  echo "Installing Fail2ban"
   aptitude -y -q install fail2ban
   # Reduce Fail2Ban memory usage - http://hacksnsnacks.com/snippets/reduce-fail2ban-memory-usage/
   echo "ulimit -s 256" | sudo tee -a /etc/default/fail2ban
@@ -225,6 +226,7 @@ fi
 
 # Install UFW
 if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
+  echo "Installing UFW"
   apt-get -qq install ufw
   ufw default deny incoming
   ufw default allow outgoing
@@ -234,6 +236,7 @@ if [[ ("$UFW" == "y" || "$UFW" == "Y" || "$UFW" == "") ]]; then
 fi
 
 # Install Metrix daemon
+echo "Installing metrix daemon"
 wget "$TARBALLURL"
 tar -xzvf "$TARBALLNAME" -C /usr/local/bin
 rm "$TARBALLNAME"

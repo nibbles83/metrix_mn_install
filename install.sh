@@ -307,7 +307,7 @@ if ! systemctl status metrixd | grep -q "active (running)"; then
 fi
 
 echo "Waiting for wallet to load..."
-until su -c "Metrix-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do
+until su -c "metrix-cli getinfo 2>/dev/null | grep -q \"version\"" $USER; do
   sleep 1;
 done
 

@@ -89,6 +89,9 @@ Once the amount has been sent you now need to wait for 15 confirmations.
 ### Setup the masternode
 ==========================
 
+If you haven't already, create an account with a VPS provider and create your first VPS system. Ensure that its size meets the minimum requirements, also ensure that you open port 22 and 33820 through the VPS provider firewall. Your VPS provider will provide documatation on these steps for their environment.  
+Make a note of the Public IP addresses that you are allocated, you will need these later.
+
 Generate your Masternode Private Key
 
 In your wallet, open Tools -> Debug console and run the following command to get your masternode key:
@@ -113,3 +116,21 @@ Masternode Private Key = The output from genkey
 Masternode TRX Hash = Large hash from outputs
 Masternode TRX index = Single digit from outputs
 ```
+
+Restart and unlock your wallet.  
+
+SSH (Putty on Windows, Terminal.app on macOS) to your VPS, login as root and run the following command:
+
+`bash <( curl https://raw.githubusercontent.com/nibbles83/metrix_mn_install/master/install.sh )`  
+
+If you get the error "bash: curl: command not found", run this first: `apt -y install curl`
+
+The script will prompt to confirm your masternode public IP and will require the masternode genkey (Copy a genkey from the text file created above, in PuTTY right click to paste).  
+
+The installation will proceed and the wallet will start.
+You should now wait for the wallet to complete the sync.  
+Type `metrix-cli getinfo | grep blocks` and compare it with the current [Explorer](https://www.mystakingwallet.com/app/explorer) blockcount.
+
+When your node is in sync open the masternode tab in Altitude and click the Start-All button.
+
+It can take a few moments to start the node. Altitude will report on the status of this action.

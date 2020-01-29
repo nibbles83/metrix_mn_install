@@ -1,5 +1,18 @@
 #!/bin/bash
 
+# Check if we are root
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root." 1>&2
+   exit 1
+fi
+
+## Create Swapfile
+fallocate -l 3G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo -e "/swapfile none swap sw 0 0 \n" >> /etc/fstab
+
 # Make installer interactive and select normal mode by default.
 INTERACTIVE="y"
 
@@ -104,19 +117,6 @@ BOOTSTRAPARCHIVE="metrix.zip"
 
 #!/bin/bash
 
-# Check if we are root
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root." 1>&2
-   exit 1
-fi
-
-## Create Swapfile
-fallocate -l 3G /swapfile
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-echo -e "/swapfile none swap sw 0 0 \n" >> /etc/fstab
-
 # Check if we have enough memory
 if [[ $(free -m | awk '/^Mem:/{print $2}') -lt 850 ]]; then
   echo "This installation requires at least 1GB of RAM.";
@@ -212,8 +212,8 @@ echo "Installing dependencies..."
 apt-get -qq update
 apt-get -qq upgrade
 apt-get -qq autoremove
-apt-get -qq install wget htop xz-utils
-apt-get -qq install git && apt-get -qq install pkg-config
+apt-get -qq install htop
+apt-get -qq install git
 
 # Install Fail2Ban
 if [[ ("$FAIL2BAN" == "y" || "$FAIL2BAN" == "Y" || "$FAIL2BAN" == "") ]]; then

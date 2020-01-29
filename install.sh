@@ -215,7 +215,7 @@ apt-get -qq update
 apt-get -qq upgrade
 apt-get -qq autoremove
 apt-get -qq install htop
-apt-get -qq install git unzip
+apt-get -qq install git unzip aptitude
 
 # Install Fail2Ban
 if [[ ("$FAIL2BAN" == "y" || "$FAIL2BAN" == "Y" || "$FAIL2BAN" == "") ]]; then

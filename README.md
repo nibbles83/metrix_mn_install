@@ -131,6 +131,8 @@ The installation will proceed and the wallet will start.
 You should now wait for the wallet to complete the sync.  
 Type `metrix-cli getinfo | grep blocks` and compare it with the current [Explorer](https://www.mystakingwallet.com/app/explorer) blockcount.
 
-When your node is in sync open the masternode tab in Altitude and click the Start-All button.
+### Starting the node
+
+Once your remote node is in sync, open the masternode tab in Altitude and click the Start-All button.
 
 It can take a few moments to start the node. Altitude will report on the status of this action.

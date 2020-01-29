@@ -1,18 +1,5 @@
 #!/bin/bash
 
-# Check if we are root
-if [ "$(id -u)" != "0" ]; then
-   echo "This script must be run as root." 1>&2
-   exit 1
-fi
-
-## Create Swapfile
-fallocate -l 3G /swapfile
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-echo -e "/swapfile none swap sw 0 0 \n" >> /etc/fstab
-
 # Make installer interactive and select normal mode by default.
 INTERACTIVE="y"
 
@@ -110,12 +97,27 @@ clear
 
 # These should automatically find the latest version of Metrix
 
-TARBALLURL=$(curl -s https://api.github.com/repos/TheLindaProjectInc/Metrix/releases/latest | grep browser_download_url | grep -e "Metrix-linux-x64" | cut -d '"' -f 4)
-TARBALLNAME=$(curl -s https://api.github.com/repos/TheLindaProjectInc/Metrix/releases/latest | grep browser_download_url | grep -e "Metrix-linux-x64" | cut -d '"' -f 4 | cut -d "/" -f 9)
-BOOTSTRAPURL=$(curl -s https://lindaproject.nyc3.digitaloceanspaces.com/metrix/bootstrap/metrix.zip)
+TARBALLURL=$(curl -s https://api.github.com/repos/TheLindaProjectInc/Metrix/releases/latest | grep browser_download_url | grep -e "metrix-linux-x64" | cut -d '"' -f 4)
+TARBALLNAME=$(curl -s https://api.github.com/repos/TheLindaProjectInc/Metrix/releases/latest | grep browser_download_url | grep -e "metrix-linux-x64" | cut -d '"' -f 4 | cut -d "/" -f 9)
+BOOTSTRAPURL="https://lindaproject.nyc3.digitaloceanspaces.com/metrix/bootstrap/metrix.zip"
 BOOTSTRAPARCHIVE="metrix.zip"
 
 #!/bin/bash
+
+# Check if we are root
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root." 1>&2
+   exit 1
+fi
+
+## Create Swapfile
+if [ -z $(cat /proc/swaps | grep /swapfile | cut -f 3) ]; then
+  fallocate -l 3G /swapfile
+  chmod 600 /swapfile
+  mkswap /swapfile
+  swapon /swapfile
+  echo -e "/swapfile none swap sw 0 0 \n" >> /etc/fstab
+fi
 
 # Check if we have enough memory
 if [[ $(free -m | awk '/^Mem:/{print $2}') -lt 850 ]]; then
@@ -213,7 +215,7 @@ apt-get -qq update
 apt-get -qq upgrade
 apt-get -qq autoremove
 apt-get -qq install htop
-apt-get -qq install git
+apt-get -qq install git unzip
 
 # Install Fail2Ban
 if [[ ("$FAIL2BAN" == "y" || "$FAIL2BAN" == "Y" || "$FAIL2BAN" == "") ]]; then
@@ -269,7 +271,7 @@ rpcpassword=${RPCPASSWORD}
 rpcuser=${RPCUSER}
 server=1
 EOL
-fi
+
 chmod 0600 "$USERHOME/.metrix/metrix.conf"
 chown -R $USER:$USER "$USERHOME/.metrix"
 

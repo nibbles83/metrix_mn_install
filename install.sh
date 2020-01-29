@@ -110,6 +110,13 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+## Create Swapfile
+fallocate -l 3G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo -e "/swapfile none swap sw 0 0 \n" >> /etc/fstab
+
 # Check if we have enough memory
 if [[ $(free -m | awk '/^Mem:/{print $2}') -lt 850 ]]; then
   echo "This installation requires at least 1GB of RAM.";

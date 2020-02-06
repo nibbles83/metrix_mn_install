@@ -257,7 +257,7 @@ touch "$USERHOME/.metrix/metrix.conf"
 
 cat > "$USERHOME/.metrix/metrix.conf" << EOL
 ${INSTALLERUSED}
-bind=[${BINDIP}]:52543
+bind=[${BINDIP}]:33820
 daemon=1
 externalip=[${EXTERNALIP}]
 listen=1
